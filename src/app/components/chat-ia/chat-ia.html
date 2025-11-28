@@ -1,0 +1,32 @@
+<div class="chat-container">
+  <h2>💬 Chat con IA para Entrevistas Técnicas</h2>
+  
+  <div class="messages">
+    <div *ngFor="let message of mensajes" 
+         [class.user-message]="message.esUsuario" 
+         [class.bot-message]="!message.esUsuario" 
+         class="message">
+      {{ message.texto }}
+    </div>
+    
+    <div *ngIf="cargando" class="loading">
+      ⏳ La IA está pensando...
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input 
+      type="text" 
+      [(ngModel)]="nuevaPregunta" 
+      placeholder="Escribe tu pregunta técnica..."
+      (keyup.enter)="enviarPregunta()"
+      class="input-field"
+      [disabled]="cargando">
+    
+    <button (click)="enviarPregunta()" 
+            class="btn-enviar"
+            [disabled]="cargando || !nuevaPregunta.trim()">
+      {{ cargando ? 'Enviando...' : 'Enviar' }}
+    </button>
+  </div>
+</div>
