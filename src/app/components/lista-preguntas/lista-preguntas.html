@@ -1,1 +1,65 @@
-<p>lista-preguntas works!</p>
+<div class="preguntas-container">
+  <h2>📋 Banco de Preguntas Técnicas</h2>
+
+  <!-- Barra de búsqueda y crear -->
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="palabraBusqueda"
+        (ngModelChange)="onBusquedaChange()"
+        placeholder="🔍 Buscar preguntas..."
+        class="search-input" />
+      <button (click)="cargarPreguntas()" class="btn-refresh">🔄</button>
+    </div>
+    <button (click)="toggleModoCrear()" class="btn-create">
+      {{ modoCrear ? '❌ Cancelar' : '➕ Nueva Pregunta' }}
+    </button>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="error-message">
+    ⚠️ {{ error }}
+  </div>
+
+  <!-- Formulario de crear pregunta -->
+  <div *ngIf="modoCrear" class="form-create">
+    <h3>Nueva Pregunta</h3>
+    <input
+      type="text"
+      [(ngModel)]="nuevaPregunta.titulo"
+      placeholder="Título de la pregunta"
+      class="input-field" />
+    <textarea
+      [(ngModel)]="nuevaPregunta.contenido"
+      placeholder="Contenido de la pregunta"
+      rows="4"
+      class="textarea-field"></textarea>
+    <div class="form-actions">
+      <button (click)="crearPregunta()" class="btn-save" [disabled]="cargando">
+        {{ cargando ? 'Guardando...' : '💾 Guardar' }}
+      </button>
+      <button (click)="cancelarCreacion()" class="btn-cancel">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading">
+    ⏳ Cargando...
+  </div>
+
+  <!-- Lista de preguntas -->
+  <div class="preguntas-list">
+    <div *ngFor="let pregunta of preguntasFiltradas" class="pregunta-card">
+      <h3 class="pregunta-titulo">{{ pregunta.titulo }}</h3>
+      <p class="pregunta-contenido">{{ pregunta.contenido }}</p>
+      <div class="pregunta-footer">
+        <span class="pregunta-id">ID: {{ pregunta.id }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="!cargando && preguntasFiltradas.length === 0" class="empty-state">
+      <p>📭 No hay preguntas disponibles</p>
+    </div>
+  </div>
+</div>

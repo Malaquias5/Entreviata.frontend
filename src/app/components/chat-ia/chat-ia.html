@@ -1,16 +1,38 @@
 <div class="chat-container">
-  <h2>💬 Chat con IA para Entrevistas Técnicas</h2>
+  <div class="chat-header">
+    <h2>💬 Chat con IA para Entrevistas Técnicas</h2>
+    <div class="chat-actions">
+      <button (click)="probarConexion()" class="btn-test" title="Probar conexión con backend">
+        🔍 Probar Conexión
+      </button>
+      <button (click)="limpiarChat()" class="btn-clear" title="Limpiar conversación">
+        🗑️ Limpiar
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicador de error -->
+  <div *ngIf="ultimoError" class="error-banner">
+    ⚠️ Último error: {{ ultimoError }}
+  </div>
   
-  <div class="messages">
+  <div class="messages" #messagesContainer>
     <div *ngFor="let message of mensajes" 
          [class.user-message]="message.esUsuario" 
          [class.bot-message]="!message.esUsuario" 
          class="message">
-      {{ message.texto }}
+      <div class="message-content">{{ message.texto }}</div>
+      <div class="message-time">{{ message.timestamp | date:'HH:mm:ss' }}</div>
     </div>
     
     <div *ngIf="cargando" class="loading">
+      <div class="spinner"></div>
       ⏳ La IA está pensando...
+    </div>
+
+    <div *ngIf="mensajes.length === 0" class="empty-state">
+      <p>👋 ¡Hola! Escribe una pregunta técnica para comenzar.</p>
+      <p class="hint">Ejemplo: "¿Qué es Java?" o "Explícame Spring Boot"</p>
     </div>
   </div>
 
@@ -26,7 +48,11 @@
     <button (click)="enviarPregunta()" 
             class="btn-enviar"
             [disabled]="cargando || !nuevaPregunta.trim()">
-      {{ cargando ? 'Enviando...' : 'Enviar' }}
+      {{ cargando ? '⏳ Enviando...' : '🚀 Enviar' }}
     </button>
+  </div>
+
+  <div class="chat-footer">
+    <small>Conectando a: http://localhost:8080/api/ia/preguntar</small>
   </div>
 </div>
